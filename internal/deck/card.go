@@ -26,6 +26,35 @@ func (c *Card) String() string {
 	return fmt.Sprintf("{Card %s : %s}", c.Suit, c.Rank)
 }
 
+func (c *Card) IsSame(other *Card) bool {
+	return c.Rank == other.Rank && c.Suit == other.Suit
+}
+
+type Cards []*Card
+
+func (c Cards) Len() int {
+	return len(c)
+}
+
+func (c Cards) Less(i, j int) bool {
+	a := c[i].Rank
+	if a == ACE {
+		a = 50
+	}
+	b := c[j].Rank
+	if b == ACE {
+		b = 50
+	}
+	if a == b {
+		return c[i].Suit > c[j].Suit
+	}
+	return a > b
+}
+
+func (c Cards) Swap(i, j int) {
+	c[i], c[j] = c[j], c[i]
+}
+
 const (
 	ACE CardRank = iota
 	TWO

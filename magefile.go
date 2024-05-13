@@ -22,7 +22,12 @@ func BuildNoTest() error {
 
 func Test() error {
 	os.Setenv("MAGEFILE_VERBOSE", "true")
-	return sh.Run("go", "test", "./...")
+	return sh.Run("go", "test", "./tests...")
+}
+
+func Testv() error {
+	os.Setenv("MAGEFILE_VERBOSE", "true")
+	return sh.Run("go", "test", "./tests...", "-v")
 }
 
 func Run() error {
@@ -31,4 +36,8 @@ func Run() error {
 
 func GoRun() error {
 	return sh.Run("go", "run", "main.go")
+}
+
+func Clean() error {
+	return sh.Rm("./bin/")
 }
