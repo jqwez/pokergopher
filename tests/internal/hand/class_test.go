@@ -134,6 +134,44 @@ func TestIsStraight(t *testing.T) {
 	}
 }
 
+func TestPairsEvaluator(t *testing.T) {
+	hands := []struct {
+		Cards deck.Cards
+		Class hand.HandClass
+	}{
+		{
+			Cards: deck.Cards{
+				{Suit: deck.SPADE, Rank: deck.ACE},
+				{Suit: deck.DIAMOND, Rank: deck.ACE},
+				{Suit: deck.CLUB, Rank: deck.ACE},
+				{Suit: deck.HEART, Rank: deck.ACE},
+				{Suit: deck.CLUB, Rank: deck.TEN},
+			},
+			Class: hand.QUADS,
+		},
+		{
+			Cards: deck.Cards{
+				{Suit: deck.SPADE, Rank: deck.TEN},
+				{Suit: deck.CLUB, Rank: deck.TEN},
+				{Suit: deck.SPADE, Rank: deck.QUEEN},
+				{Suit: deck.DIAMOND, Rank: deck.TEN},
+				{Suit: deck.SPADE, Rank: deck.ACE},
+				{Suit: deck.HEART, Rank: deck.TEN},
+			},
+			Class: hand.QUADS,
+		}}
+	for _, tt := range hands {
+		classer := hand.NewClasser()
+		hand := hand.NewHand()
+		hand.Cards = tt.Cards
+		handClass, _hand := classer.PairsEvaluator(hand)
+		if handClass != tt.Class {
+			t.Fatal("Evaluated ", handClass, " should be ", tt.Class, " for hand ", _hand)
+		}
+	}
+
+}
+
 func TestFindBestHand(t *testing.T) {
 
 	hands := []struct {

@@ -49,6 +49,16 @@ func (h *Hand) FilterSuit(suit deck.CardSuit) *Hand {
 	return hand
 }
 
+func (h *Hand) FilterRank(rank deck.CardRank) *Hand {
+	hand := NewHand()
+	for _, card := range h.Cards {
+		if card.Rank == rank {
+			hand.AddCard(card)
+		}
+	}
+	return hand
+}
+
 func (h *Hand) SortByRank() *Hand {
 	sort.Sort(h.Cards)
 	return h

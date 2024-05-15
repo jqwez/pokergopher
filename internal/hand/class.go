@@ -41,6 +41,7 @@ func (c *Classer) SetHand(h *Hand) *Classer {
 }
 
 func (c *Classer) findBestHand() *Classer {
+	pairsType, pairs := c.PairsEvaluator(c.Hand)
 	isStraightFlush, straightFlush := c.IsStraightFlush(c.Hand)
 	if isStraightFlush {
 		c.Hand = straightFlush
@@ -48,6 +49,11 @@ func (c *Classer) findBestHand() *Classer {
 		if c.Hand.Cards[4].Rank == deck.TEN {
 			c.Class = ROYAL
 		}
+		return c
+	}
+	if pairsType == QUADS {
+		c.Hand = pairs
+		c.Class = QUADS
 		return c
 	}
 	isFlush, flush := c.IsFlush(c.Hand)
@@ -66,6 +72,37 @@ func (c *Classer) findBestHand() *Classer {
 	c.Hand.Cards = c.Hand.Cards[:5]
 	c.Class = NOPAIR
 	return c
+}
+
+func (c *Classer) PairsEvaluator(h *Hand) (HandClass, *Hand) {
+	if len(h.Cards) < 5 {
+		return NOPAIR, h.SortByRank()
+	}
+	counter := make(map[deck.CardRank]int)
+	for _, card := range h.Cards {
+		counter[card.Rank] += 1
+	}
+	for rank, quantity := range counter {
+		if quantity == 4 {
+			_h := c.FillByHighCard(h, rank, 1)
+			return QUADS, _h
+		}
+	}
+
+	return NOPAIR, h
+
+}
+
+func (c *Classer) FillByHighCard(h *Hand, exclude deck.CardRank, addCount int) *Hand {
+	h = h.SortByRank()
+	_h := h.FilterRank(exclude)
+	for _, card := range h.Cards {
+		if card.Rank != exclude && addCount > 0 {
+			_h.AddCard(card)
+			addCount -= 1
+		}
+	}
+	return _h
 }
 
 func (c *Classer) IsStraightFlush(h *Hand) (bool, *Hand) {
