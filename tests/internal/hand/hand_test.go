@@ -66,13 +66,24 @@ func TestRemoveCard(t *testing.T) {
 }
 
 func TestFilterSuit(t *testing.T) {
-	hand := buildTestHand()
-	hand = hand.FilterSuit(deck.HEART)
-	if hand.HasCard(&deck.Card{Suit: deck.SPADE, Rank: deck.KING}) {
+	h := buildTestHand()
+	h = h.FilterSuit(deck.HEART)
+	if h.HasCard(&deck.Card{Suit: deck.SPADE, Rank: deck.KING}) {
 		t.Fatal(&deck.Card{Suit: deck.SPADE, Rank: deck.KING}, "Should NOT be in the hand")
 	}
-	if !hand.HasCard(&deck.Card{Suit: deck.HEART, Rank: deck.TEN}) {
+	if !h.HasCard(&deck.Card{Suit: deck.HEART, Rank: deck.TEN}) {
 		t.Fatal(&deck.Card{Suit: deck.HEART, Rank: deck.TEN}, "Should be in the hand")
+	}
+}
+
+func TestFilterRank(t *testing.T) {
+	h := buildTestHand()
+	h = h.FilterRank(deck.ACE)
+	if h.Cards[0].Rank != deck.ACE {
+		t.Fatal("Cards should be Ace is : ", h.Cards[0].Rank)
+	}
+	if len(h.Cards) > 1 {
+		t.Fatal("Failed to filter down to Ace")
 	}
 }
 

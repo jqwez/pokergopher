@@ -159,7 +159,28 @@ func TestPairsEvaluator(t *testing.T) {
 				{Suit: deck.HEART, Rank: deck.TEN},
 			},
 			Class: hand.QUADS,
-		}}
+		},
+		{
+			Cards: deck.Cards{
+				{Suit: deck.SPADE, Rank: deck.ACE},
+				{Suit: deck.DIAMOND, Rank: deck.ACE},
+				{Suit: deck.CLUB, Rank: deck.ACE},
+				{Suit: deck.HEART, Rank: deck.TEN},
+				{Suit: deck.CLUB, Rank: deck.TEN},
+			},
+			Class: hand.FHOUSE,
+		},
+		{
+			Cards: deck.Cards{
+				{Suit: deck.SPADE, Rank: deck.ACE},
+				{Suit: deck.HEART, Rank: deck.ACE},
+				{Suit: deck.SPADE, Rank: deck.FIVE},
+				{Suit: deck.DIAMOND, Rank: deck.FIVE},
+				{Suit: deck.CLUB, Rank: deck.THREE},
+			},
+			Class: hand.TWOPAIR,
+		},
+	}
 	for _, tt := range hands {
 		classer := hand.NewClasser()
 		hand := hand.NewHand()
@@ -173,7 +194,6 @@ func TestPairsEvaluator(t *testing.T) {
 }
 
 func TestFindBestHand(t *testing.T) {
-
 	hands := []struct {
 		Cards deck.Cards
 		Class hand.HandClass

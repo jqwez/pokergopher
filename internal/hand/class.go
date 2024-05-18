@@ -82,15 +82,27 @@ func (c *Classer) PairsEvaluator(h *Hand) (HandClass, *Hand) {
 	for _, card := range h.Cards {
 		counter[card.Rank] += 1
 	}
+	quantities := make(map[int][]deck.CardRank)
 	for rank, quantity := range counter {
-		if quantity == 4 {
-			_h := c.FillByHighCard(h, rank, 1)
-			return QUADS, _h
-		}
+		quantities[quantity] = append(quantities[quantity], rank)
 	}
-
+	for _, v := range []int{4, 3, 2, 1} {
+		ranks := quantities[v]
+		if len(ranks) < 1 {
+			continue
+		}
+		tRank := deck.TWO
+		for _, rank := range ranks {
+			if rank == deck.ACE {
+				tRank = rank
+			} else if rank > tRank {
+				tRank = rank
+			}
+		}
+		_h := c.FillByHighCard(h, tRank, 1)
+		return QUADS, _h
+	}
 	return NOPAIR, h
-
 }
 
 func (c *Classer) FillByHighCard(h *Hand, exclude deck.CardRank, addCount int) *Hand {
